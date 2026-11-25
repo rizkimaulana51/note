@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kilas – catat, petakan, diskusikan</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f5;--surface:#fff;--ink:#1b2430;--mute:#5d6b7c;--line:#d7dde6;--accent:#2f6f73;--accent-ink:#fff;
+--c-Sosmed:#3b6fd4;--c-Diskusi:#d9822b;--c-Aktivitas:#2f8f6b;--c-Bacaan:#8a4fbf;--c-Lainnya:#6b7685}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#12171e;--surface:#1c232d;--ink:#e8edf3;--mute:#93a1b2;--line:#2c3643;--accent:#5fb3b8;--accent-ink:#0d1418}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 Figtree,system-ui,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+h1,h2,h3{font-family:'Bricolage Grotesque',Figtree,sans-serif;line-height:1.15;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:18px}
+header h1{font-size:2rem}
+header p{margin:2px 0 0;color:var(--mute)}
+.btn{border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:10px;cursor:pointer}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.btn.sm{padding:4px 10px;font-size:.85rem}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.tab{background:none;border:0;padding:10px 16px;cursor:pointer;color:var(--mute);border-bottom:3px solid transparent;font-weight:500}
+.tab[aria-selected=true]{color:var(--ink);border-color:var(--accent)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.bar input,.bar select{padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.bar input{flex:1;min-width:160px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.note{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:6px 14px 14px 6px;padding:14px;cursor:pointer;text-align:left;display:block;width:100%}
+.note h3{font-size:1.1rem;margin:4px 0 6px}
+.meta{font-size:.82rem;color:var(--mute)}
+.badge{display:inline-block;font-size:.78rem;font-weight:600;color:#fff;background:var(--c);border-radius:99px;padding:1px 10px}
+.tag{display:inline-block;font-size:.8rem;color:var(--mute);background:var(--bg);border-radius:6px;padding:0 7px;margin:4px 4px 0 0}
+.note ul{margin:6px 0 0;padding-left:18px;color:var(--mute);font-size:.92rem}
+.empty{padding:40px 16px;text-align:center;color:var(--mute);border:2px dashed var(--line);border-radius:14px}
+.mapbox{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.mapbox svg{display:block;width:100%;height:auto;max-height:78vh}
+.mapbox text{fill:var(--ink);font-family:Figtree,sans-serif}
+.nd{cursor:pointer}
+.legend{display:flex;flex-wrap:wrap;gap:12px;padding:10px 14px;border-top:1px solid var(--line);font-size:.85rem;color:var(--mute)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);margin-right:5px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px}
+.panel h3{margin-bottom:10px}
+.row{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:.9rem}
+.row .lab{width:96px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .tr{flex:1;background:var(--bg);border-radius:6px;height:14px;overflow:hidden}
+.row .fl{height:100%;background:var(--c,var(--accent));border-radius:6px}
+dialog{border:0;border-radius:16px;padding:0;width:min(640px,94vw);max-height:92vh;background:var(--bg);color:var(--ink)}
+dialog::backdrop{background:rgba(10,14,20,.55)}
+.dlg{padding:18px;overflow:auto;max-height:92vh}
+.dlg label{display:block;font-weight:600;font-size:.9rem;margin:12px 0 4px}
+.dlg input,.dlg select,.dlg textarea{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;justify-content:flex-end}
+.hint{font-size:.8rem;color:var(--mute);margin-top:2px}
+.card{background:var(--surface);border-top:10px solid var(--c);border-radius:12px;padding:22px}
+.card h2{font-size:1.6rem;margin:8px 0}
+.card ol{margin:14px 0;padding-left:0;list-style:none;display:grid;gap:8px}
+.card li{background:var(--bg);border-radius:10px;padding:10px 14px;border-left:4px solid var(--c)}
+.card .q{margin-top:14px;padding:12px 14px;border:2px dashed var(--c);border-radius:10px}
+.card .q b{display:block;margin-bottom:2px}
+.card .brand{margin-top:14px;font-size:.78rem;color:var(--mute)}
+@media(max-width:520px){.two{grid-template-columns:1fr}header h1{font-size:1.6rem}}
+@media print{body *{visibility:hidden}.card,.card *{visibility:visible}.card{position:absolute;inset:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Kilas</h1>
+      <p>Catat apa yang kamu pelajari, lihat petanya, bawa ke diskusi.</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" id="exp">Ekspor</button>
+      <button class="btn" id="imp">Impor</button>
+      <input type="file" id="file" accept="application/json" hidden>
+      <button class="btn pri" id="add">Catatan baru</button>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-v="list" aria-selected="true">Catatan</button>
+    <button class="tab" role="tab" data-v="map" aria-selected="false">Peta</button>
+    <button class="tab" role="tab" data-v="stat" aria-selected="false">Ringkasan</button>
+  </div>
+
+  <div class="bar" id="bar">
+    <input id="q" type="search" placeholder="Cari judul, poin, atau tag" aria-label="Cari catatan">
+    <select id="ft" aria-label="Filter jenis"></select>
+  </div>
+
+  <main id="view"></main>
+</div>
+
+<dialog id="dEdit"><form class="dlg" id="fEdit" method="dialog"></form></dialog>
+<dialog id="dView"><div class="dlg" id="vBody"></div></dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+const TYPES=['Sosmed','Diskusi','Aktivitas','Bacaan','Lainnya'];
+const KEY='kilas:notes:v1';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const col=t=>`var(--c-${TYPES.includes(t)?t:'Lainnya'})`;
+const today=()=>new Date().toISOString().slice(0,10);
+const fmt=d=>{try{return new Date(d+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}catch(e){return d}};
+let notes=load(), view='list';
+
+function load(){
+  try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r)}catch(e){}
+  return [
+    {id:'a1',title:'Cara bikin hook video yang menahan penonton',type:'Sosmed',tags:['konten','video'],date:today(),link:'',points:['3 detik pertama harus menjawab "kenapa aku harus lanjut nonton?"','Mulai dari hasil, baru jelaskan prosesnya','Potong jeda napas supaya ritme terasa cepat'],questions:'Format hook mana yang cocok untuk topik kita?'},
+    {id:'a2',title:'Rapat mingguan tim: prioritas bulan ini',type:'Diskusi',tags:['tim','konten'],date:today(),link:'',points:['Fokus ke 2 proyek, sisanya ditunda','Tiap Jumat ada review singkat 15 menit'],questions:'Apa yang bisa kita hentikan supaya fokus?'}
+  ];
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(notes))}catch(e){}}
+
+function filtered(){
+  const q=$('#q').value.trim().toLowerCase(), t=$('#ft').value;
+  return notes.filter(n=>(!t||n.type===t)&&(!q||[n.title,n.tags.join(' '),n.points.join(' '),n.questions].join(' ').toLowerCase().includes(q)))
+    .sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+}
+
+function render(){
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===view));
+  $('#bar').style.display=view==='stat'?'none':'flex';
+  const v=$('#view');
+  if(view==='list')v.innerHTML=listHTML();
+  else if(view==='map')v.innerHTML=mapHTML();
+  else v.innerHTML=statHTML();
+}
+
+function listHTML(){
+  const f=filtered();
+  if(!f.length)return `<div class="empty"><p><b>${notes.length?'Tidak ada catatan yang cocok.':'Belum ada catatan.'}</b></p><p>${notes.length?'Ubah kata kunci atau filter.':'Tekan “Catatan baru” untuk mulai mencatat.'}</p></div>`;
+  return `<div class="grid">${f.map(n=>`<button class="note" style="--c:${col(n.type)}" data-open="${esc(n.id)}">
+    <span class="badge">${esc(n.type)}</span> <span class="meta">${fmt(n.date)}</span>
+    <h3>${esc(n.title)}</h3>
+    <ul>${n.points.slice(0,3).map(p=>`<li>${esc(p)}</li>`).join('')}</ul>
+    <div>${n.tags.map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div></button>`).join('')}</div>`;
+}
+
+function mapHTML(){
+  const f=filtered();
+  if(!f.length)return `<div class="empty"><p><b>Peta masih kosong.</b></p><p>Tambah catatan dengan tag, lalu lihat hubungannya di sini.</p></div>`;
+  const W=900,H=640,cx=W/2,cy=H/2;
+  const tags=[...new Set(f.flatMap(n=>n.tags.length?n.tags:['tanpa-tag']))];
+  const tp={};
+  tags.forEach((t,i)=>{const a=-Math.PI/2+i*2*Math.PI/tags.length;tp[t]={a,x:cx+Math.cos(a)*165,y:cy+Math.sin(a)*150}});
+  const kids={};
+  f.forEach(n=>{const t=(n.tags[0])||'tanpa-tag';(kids[t]=kids[t]||[]).push(n)});
+  let lines='',nodes='';
+  tags.forEach(t=>{lines+=`<line x1="${cx}" y1="${cy}" x2="${tp[t].x}" y2="${tp[t].y}" stroke="var(--line)" stroke-width="3"/>`});
+  const pos={};
+  tags.forEach(t=>{
+    const ks=kids[t]||[],p=tp[t],spread=Math.min(2.2,.55*ks.length);
+    ks.forEach((n,j)=>{
+      const a=p.a+(ks.length>1?(j/(ks.length-1)-.5)*spread:0), r=120+(j%2)*28;
+      pos[n.id]={x:Math.max(70,Math.min(W-70,p.x+Math.cos(a)*r)),y:Math.max(24,Math.min(H-24,p.y+Math.sin(a)*r))};
+    });
+  });
+  f.forEach(n=>{
+    const ts=n.tags.length?n.tags:['tanpa-tag'],p=pos[n.id];
+    ts.forEach((t,i)=>{lines+=`<line x1="${tp[t].x}" y1="${tp[t].y}" x2="${p.x}" y2="${p.y}" stroke="${col(n.type)}" stroke-width="${i?1.5:2.5}" ${i?'stroke-dasharray="5 4"':''} opacity=".8"/>`});
+  });
+  nodes+=`<circle cx="${cx}" cy="${cy}" r="42" fill="var(--accent)"/><text x="${cx}" y="${cy+5}" text-anchor="middle" font-weight="700" font-size="16" style="fill:var(--accent-ink)">Kilas</text>`;
+  tags.forEach(t=>{const p=tp[t];nodes+=`<g><rect x="${p.x-50}" y="${p.y-17}" width="100" height="34" rx="17" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="${p.x}" y="${p.y+5}" text-anchor="middle" font-size="14" font-weight="600">#${esc(t.length>11?t.slice(0,10)+'…':t)}</text></g>`});
+  f.forEach(n=>{const p=pos[n.id],lab=n.title.length>22?n.title.slice(0,21)+'…':n.title;
+    nodes+=`<g class="nd" tabindex="0" role="button" data-open="${esc(n.id)}" aria-label="${esc(n.title)}"><rect x="${p.x-66}" y="${p.y-20}" width="132" height="40" rx="10" fill="${col(n.type)}"/><text x="${p.x}" y="${p.y+5}" text-anchor="middle" font-size="12" font-weight="500" style="fill:#fff">${esc(lab)}</text></g>`});
+  return `<div class="mapbox"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Peta catatan berdasarkan tag">${lines}${nodes}</svg>
+  <div class="legend">${TYPES.map(t=>`<span style="--c:${col(t)}"><i class="dot"></i>${t}</span>`).join('')}<span>Garis putus-putus: catatan juga terhubung ke tag lain. Klik kotak untuk membuka.</span></div></div>`;
+}
+
+function statHTML(){
+  if(!notes.length)return `<div class="empty"><p><b>Belum ada data.</b></p><p>Ringkasan muncul setelah kamu punya catatan.</p></div>`;
+  const bar=(items,colr)=>{const m=Math.max(...items.map(i=>i[1]),1);return items.map(([l,v,c])=>`<div class="row" ${c?`style="--c:${c}"`:''}><span class="lab" title="${esc(l)}">${esc(l)}</span><span class="tr"><span class="fl" style="display:block;width:${v/m*100}%"></span></span><b>${v}</b></div>`).join('')};
+  const byT=TYPES.map(t=>[t,notes.filter(n=>n.type===t).length,col(t)]).filter(x=>x[1]);
+  const tc={};notes.forEach(n=>n.tags.forEach(t=>tc[t]=(tc[t]||0)+1));
+  const topT=Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const days={};notes.forEach(n=>{if(n.date)days[n.date]=(days[n.date]||0)+1});
+  const recent=Object.entries(days).sort((a,b)=>b[0].localeCompare(a[0])).slice(0,7).reverse().map(([d,v])=>[fmt(d),v]);
+  const pts=notes.reduce((s,n)=>s+n.points.length,0);
+  return `<div class="stats">
+  <div class="panel"><h3>${notes.length} catatan, ${pts} poin</h3><p class="meta" style="margin:0">Tersimpan di browser ini. Ekspor secara berkala untuk cadangan.</p></div>
+  <div class="panel"><h3>Berdasarkan jenis</h3>${bar(byT)}</div>
+  <div class="panel"><h3>Tag terbanyak</h3>${topT.length?bar(topT):'<p class="meta">Belum ada tag.</p>'}</div>
+  <div class="panel"><h3>Aktivitas mencatat</h3>${bar(recent)}</div></div>`;
+}
+
+/* Form */
+function openEdit(id){
+  const n=notes.find(x=>x.id===id)||{title:'',type:'Sosmed',tags:[],date:today(),link:'',points:[],questions:''};
+  const f=$('#fEdit');
+  f.innerHTML=`<h2>${id?'Ubah catatan':'Catatan baru'}</h2>
+  <label for="eT">Judul</label><input id="eT" required maxlength="120" value="${esc(n.title)}" placeholder="Contoh: Tips riset dari thread X">
+  <div class="two"><div><label for="eY">Jenis</label><select id="eY">${TYPES.map(t=>`<option ${t===n.type?'selected':''}>${t}</option>`).join('')}</select></div>
+  <div><label for="eD">Tanggal</label><input id="eD" type="date" value="${esc(n.date)}"></div></div>
+  <label for="eG">Tag</label><input id="eG" value="${esc(n.tags.join(', '))}" placeholder="pisahkan dengan koma"><div class="hint">Tag yang sama akan saling terhubung di Peta.</div>
+  <label for="eL">Tautan sumber (opsional)</label><input id="eL" type="url" value="${esc(n.link)}" placeholder="https://">
+  <label for="eP">Poin penting</label><textarea id="eP" rows="6" placeholder="Satu poin per baris">${esc(n.points.join('\n'))}</textarea>
+  <label for="eQ">Pertanyaan untuk didiskusikan</label><input id="eQ" value="${esc(n.questions)}" placeholder="Apa yang ingin dibahas lagi?">
+  <div class="acts">${id?'<button type="button" class="btn" id="eX">Hapus</button>':''}<button type="button" class="btn" id="eC">Batal</button><button class="btn pri">Simpan catatan</button></div>`;
+  $('#eC').onclick=()=>$('#dEdit').close();
+  if(id)$('#eX').onclick=()=>{if(confirm('Hapus catatan ini?')){notes=notes.filter(x=>x.id!==id);save();$('#dEdit').close();$('#dView').close();render()}};
+  f.onsubmit=e=>{
+    e.preventDefault();
+    const o={id:id||'n'+Date.now().toString(36),title:$('#eT').value.trim(),type:$('#eY').value,date:$('#eD').value||today(),
+      tags:[...new Set($('#eG').value.split(',').map(s=>s.trim().replace(/^#/,'').toLowerCase()).filter(Boolean))],
+      link:$('#eL').value.trim(),points:$('#eP').value.split('\n').map(s=>s.trim()).filter(Boolean),questions:$('#eQ').value.trim()};
+    if(!o.title)return;
+    notes=id?notes.map(x=>x.id===id?o:x):[o,...notes];
+    save();$('#dEdit').close();render();
+  };
+  $('#dEdit').showModal();
+}
+
+/* Kartu ringkasan */
+function openView(id){
+  const n=notes.find(x=>x.id===id);if(!n)return;
+  const safeLink=/^https?:\/\//.test(n.link)?n.link:'';
+  $('#vBody').innerHTML=`<div class="card" id="card" style="--c:${col(n.type)}">
+    <span class="badge">${esc(n.type)}</span> <span class="meta">${fmt(n.date)}</span>
+    <h2>${esc(n.title)}</h2>
+    <div>${n.tags.map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}</div>
+    ${n.points.length?`<ol>${n.points.map(p=>`<li>${esc(p)}</li>`).join('')}</ol>`:'<p class="meta">Belum ada poin.</p>'}
+    ${n.questions?`<div class="q"><b>Untuk didiskusikan</b>${esc(n.questions)}</div>`:''}
+    ${safeLink?`<div class="meta" style="margin-top:10px">Sumber: ${esc(safeLink)}</div>`:''}
+    <div class="brand">Dibuat dengan Kilas</div></div>
+    <div class="acts"><button class="btn" id="vC">Tutup</button><button class="btn" id="vP">Cetak</button><button class="btn" id="vI">Simpan gambar</button><button class="btn pri" id="vE">Ubah</button></div>`;
+  $('#vC').onclick=()=>$('#dView').close();
+  $('#vP').onclick=()=>window.print();
+  $('#vE').onclick=()=>{$('#dView').close();openEdit(id)};
+  $('#vI').onclick=async()=>{
+    if(!window.html2canvas){alert('Fitur gambar belum termuat. Coba lagi saat online, atau pakai Cetak.');return}
+    try{const c=await html2canvas($('#card'),{backgroundColor:null,scale:2});
+      const a=document.createElement('a');a.download='kilas-'+n.title.slice(0,30).replace(/\W+/g,'-')+'.png';a.href=c.toDataURL('image/png');a.click()}
+    catch(e){alert('Gagal membuat gambar. Gunakan Cetak sebagai gantinya.')}
+  };
+  $('#dView').showModal();
+}
+
+/* Events */
+$('#ft').innerHTML='<option value="">Semua jenis</option>'+TYPES.map(t=>`<option>${t}</option>`).join('');
+$('#q').oninput=render;$('#ft').onchange=render;
+$('#add').onclick=()=>openEdit();
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{view=b.dataset.v;render()});
+$('#view').addEventListener('click',e=>{const t=e.target.closest('[data-open]');if(t)openView(t.dataset.open)});
+$('#view').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const t=e.target.closest('g[data-open]');if(t){e.preventDefault();openView(t.dataset.open)}}});
+$('#exp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(notes,null,2)],{type:'application/json'}));a.download='kilas-cadangan-'+today()+'.json';a.click()};
+$('#imp').onclick=()=>$('#file').click();
+$('#file').onchange=async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{const d=JSON.parse(await f.text());if(!Array.isArray(d))throw 0;
+    const ids=new Set(notes.map(n=>n.id));
+    d.filter(n=>n&&n.title&&!ids.has(n.id)).forEach(n=>notes.push({id:String(n.id||'i'+Math.random().toString(36).slice(2)),title:String(n.title),type:TYPES.includes(n.type)?n.type:'Lainnya',tags:Array.isArray(n.tags)?n.tags.map(String):[],date:String(n.date||today()),link:String(n.link||''),points:Array.isArray(n.points)?n.points.map(String):[],questions:String(n.questions||'')}));
+    save();render();
+  }catch(err){alert('File tidak valid. Pilih file JSON hasil ekspor Kilas.')}
+  e.target.value='';
+};
+render();
+</script>
+</body>
+</html>
